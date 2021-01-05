@@ -1,0 +1,25 @@
+{
+  "name": "onboard-jorge",
+  "version": "1.0.0",
+  "description": "onboarding project @taqtile",
+  "main": "index.js",
+  "scripts": {
+    "test": "testcommand"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/indigotech/onboard-jorge-risco.git"
+  },
+  "keywords": [
+    "onboarding"
+  ],
+  "author": "Jorge Marcelo Risco",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/indigotech/onboard-jorge-risco/issues"
+  },
+  "homepage": "https://github.com/indigotech/onboard-jorge-risco#readme",
+  "dependencies": {
+    "graphql": "^15.4.0"
+  }
+}
