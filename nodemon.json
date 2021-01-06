@@ -1,6 +1,5 @@
 {
-    "restartable": "rs",
-    "watch": ["src/"],
-    "ext": "*"
-  }
-  
+  "restartable": "rs",
+  "watch": ["src/"],
+  "ext": "*"
+}
