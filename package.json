@@ -4,6 +4,8 @@
   "description": "onboarding project @taqtile",
   "main": "index.js",
   "scripts": {
+    "start": "node 'dist/server.js'",
+    "build": "npx tsc",
     "build:dev": "nodemon 'src/server.ts' --exec 'ts-node' src/server.ts -e ts,graphql"
   },
   "repository": {
