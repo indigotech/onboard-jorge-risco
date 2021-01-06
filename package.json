@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node 'dist/server.js'",
     "build": "npx tsc",
-    "build:dev": "nodemon 'src/server.ts' --exec 'ts-node' src/server.ts -e ts,graphql"
+    "build:dev": "nodemon --exec 'ts-node' src/server.ts --config nodemon.json"
   },
   "repository": {
     "type": "git",
