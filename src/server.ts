@@ -2,7 +2,7 @@ import { ApolloServer, gql } from 'apollo-server';
 
 const typeDefs = gql`
   type Query {
-    hello: String,
+    hello: String
     goodbye: String
   }
 `;
@@ -10,7 +10,7 @@ const typeDefs = gql`
 const resolvers = {
   Query: {
     hello: () => 'Hello world!',
-    goodbye:() => 'Goodbye world!'
+    goodbye: () => 'Goodbye world!',
   },
 };
 

@@ -2,6 +2,6 @@
 
 ## Project's description
 
-## Environment and tools *
+## Environment and tools \*
 
-## Steps to run and debug *
+## Steps to run and debug \*
