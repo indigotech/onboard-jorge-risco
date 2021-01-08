@@ -9,10 +9,10 @@ nodeJS GraphQL server ([apollo-server](https://www.apollographql.com/docs/apollo
 Environment:
 
 - [Typescript](https://www.npmjs.com/package/typescript)
-- [nodeJS](https://nodejs.org/en/)
+- [nodeJS v15.5.1](https://nodejs.org/en/)
 - [apollo-server](https://www.apollographql.com/docs/apollo-server/)
 - [typeORM](https://typeorm.io/#/)
-- [docker](https://www.docker.com/)
+- [docker v20.10.2](https://www.docker.com/)
 - [PostgreSQL](https://www.postgresql.org/about/)
 
 Dev Tools:
