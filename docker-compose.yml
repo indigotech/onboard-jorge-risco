@@ -5,9 +5,9 @@ localdb:
   volumes:
     - ./db/dumps:/app-db-dumps
   environment:
-    - POSTGRES_USER=dockerAdmin
-    - POSTGRES_PASSWORD=dockerPass
-    - POSTGRES_DB=dockerNode
+    - POSTGRES_USER=adm
+    - POSTGRES_PASSWORD=pswd
+    - POSTGRES_DB=db
 
 testdb:
   image: postgres:11.2
@@ -16,6 +16,6 @@ testdb:
   volumes:
     - ./db/dumps:/app-db-dumps
   environment:
-    - POSTGRES_USER=dockerAdmin
-    - POSTGRES_PASSWORD=dockerPass
-    - POSTGRES_DB=dockerNode
+    - POSTGRES_USER=adm
+    - POSTGRES_PASSWORD=pswd
+    - POSTGRES_DB=db
