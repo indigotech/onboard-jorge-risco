@@ -9,7 +9,7 @@
     "removeComments": true,
     "preserveConstEnums": true,
     "suppressImplicitAnyIndexErrors": true,
-    "outDir": "dist",
+    "outDir": "./build",
     "skipLibCheck": true,
     "sourceMap": true,
     "paths": {
