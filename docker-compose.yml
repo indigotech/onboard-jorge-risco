@@ -18,4 +18,4 @@ testdb:
   environment:
     - POSTGRES_USER=adm
     - POSTGRES_PASSWORD=pswd
-    - POSTGRES_DB=db
+    - POSTGRES_DB=test_db
