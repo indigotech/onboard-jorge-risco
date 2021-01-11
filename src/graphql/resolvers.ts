@@ -1,5 +1,6 @@
 import { getRepository, createConnection } from 'typeorm';
 import { User } from '../entity/User';
+import { encrypt } from '../crypto';
 
 export const resolvers = {
   Query: {
@@ -11,9 +12,9 @@ export const resolvers = {
       const connection = await createConnection();
 
       const usersRepository = getRepository(User);
-
+      console.log(encrypt(args.password));
       const user = await usersRepository.findOne({
-        where: { email: args.email, password: args.password },
+        where: { email: args.email, password: encrypt(args.password) },
       });
 
       await connection.close();
