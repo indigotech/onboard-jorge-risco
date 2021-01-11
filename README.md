@@ -29,7 +29,7 @@ In order to run this project, **first** check if you have **nodeJS** properly in
 1. Clone the project. `git clone https://github.com/indigotech/onboard-jorge-risco.git`
 2. Install the dependencies. `npm install`
 3. Run `docker-compose up` on the root folder to start the container.
-4. Type `npm run build:dev` if you desire to test the connection through an example request.
-5. Type `npm start` to run `src/server.ts`
+4. Type `npm run build:dev` if you desire to run it with nodemon.
+5. Type `tsc && npm start` to run `src/server.ts`
 
-Step 3 will execute `src/index.ts` using [nodemon](https://www.npmjs.com/package/nodemon), which can be useful in eventual debugging scenarios.
+Step 3 will execute `src/server.ts` using [nodemon](https://www.npmjs.com/package/nodemon), which can be useful in eventual debugging scenarios.
