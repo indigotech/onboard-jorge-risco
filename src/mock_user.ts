@@ -10,7 +10,7 @@ createConnection()
     user.email = 'fulano@email.com';
     user.birthDate = '1444-01-01';
     user.cpf = '0000000001';
-    user.password = 'seyfHNct69bdKdFn5etS4w==';
+    user.password = 'AwnLfl1zsnvUDHeXnhKHFfUjTekcoXRDp6336GRSWRg==';
     await connection.manager.save(user);
     console.log(`Saved a new user with id: ${user.id} `);
 

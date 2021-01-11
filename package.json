@@ -23,6 +23,7 @@
   "homepage": "https://github.com/indigotech/onboard-jorge-risco#readme",
   "dependencies": {
     "apollo-server": "2.19.1",
+    "dotenv": "^8.2.0",
     "graphql": "15.4.0",
     "mysql": "2.14.1",
     "pg": "8.5.1",
