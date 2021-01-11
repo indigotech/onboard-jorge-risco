@@ -1,12 +1,25 @@
+import { getRepository, createConnection } from 'typeorm';
+import { User } from '../entity/User';
+
 export const resolvers = {
   Query: {
     hello: () => 'Hello world!',
     goodbye: () => 'Goodbye world!',
   },
   Mutation: {
-    login(_, args) {
+    login: async (_, args) => {
+      const connection = await createConnection();
+
+      const usersRepository = getRepository(User);
+
+      const user = await usersRepository.findOne({
+        where: { email: args.email, password: args.password },
+      });
+
+      await connection.close();
+      console.log(user.name);
       return {
-        user: { id: 123, birthDate: '2020-01-01', email: args.email, cpf: '62693406080' },
+        user: { id: user.id, birthDate: user.birthDate, email: user.email, cpf: user.cpf },
         token: 12,
       };
     },
