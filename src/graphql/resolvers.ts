@@ -10,9 +10,7 @@ export const resolvers = {
   Mutation: {
     login: async (_, args) => {
       const connection = await createConnection();
-
       const usersRepository = getRepository(User);
-      console.log(encrypt(args.password));
       const user = await usersRepository.findOne({
         where: { email: args.email, password: encrypt(args.password) },
       });
