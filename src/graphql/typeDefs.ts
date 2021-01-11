@@ -16,7 +16,7 @@ export const typeDefs = gql`
 
   type LoginResponse {
     user: User!
-    token: Int!
+    token: String!
   }
 
   type Mutation {
