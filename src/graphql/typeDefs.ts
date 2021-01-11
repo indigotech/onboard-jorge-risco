@@ -7,19 +7,19 @@ export const typeDefs = gql`
   }
 
   type User {
-    id: ID
-    name: String
-    email: String
-    birthDate: String
-    cpf: String
+    id: ID!
+    name: String!
+    email: String!
+    birthDate: String!
+    cpf: String!
   }
 
   type LoginResponse {
-    user: User
-    token: Int
+    user: User!
+    token: Int!
   }
 
   type Mutation {
-    login(email: String, password: String): LoginResponse
+    login(email: String!, password: String!): LoginResponse
   }
 `;
