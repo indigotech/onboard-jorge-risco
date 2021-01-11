@@ -17,7 +17,7 @@ export const resolvers = {
       });
 
       await connection.close();
-      console.log(user.name);
+
       return {
         user: { id: user.id, birthDate: user.birthDate, email: user.email, cpf: user.cpf },
         token: 12,
