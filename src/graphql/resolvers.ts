@@ -1,12 +1,27 @@
+import { getRepository, createConnection } from 'typeorm';
+import { User } from '../entity/User';
+import { hash } from '../crypto';
+
 export const resolvers = {
   Query: {
     hello: () => 'Hello world!',
     goodbye: () => 'Goodbye world!',
   },
   Mutation: {
-    login(_, args) {
+    login: async (_, args) => {
+      const email: string = args.email;
+      const XSALT: string = process.env.XSALT;
+
+      const connection = await createConnection();
+      const usersRepository = getRepository(User);
+
+      const user = await usersRepository.findOne({
+        where: { email: args.email, password: hash(args.password, email + XSALT) },
+      });
+
+      await connection.close();
       return {
-        user: { id: 123, birthDate: '2020-01-01', email: args.email, cpf: '62693406080' },
+        user,
         token: 12,
       };
     },
