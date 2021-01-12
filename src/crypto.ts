@@ -11,6 +11,6 @@ export function hash(data: string, salt: string): string {
 }
 
 export function signJWT(userId: number) {
-  const token = jwt.sign({ userID: userId }, privateKey);
+  const token = jwt.sign({ userID: userId }, privateKey, { expiresIn: 200 });
   return token;
 }
