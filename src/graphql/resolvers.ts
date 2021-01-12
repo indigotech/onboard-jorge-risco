@@ -1,6 +1,6 @@
 import { getRepository, createConnection } from 'typeorm';
 import { User } from '../entity/User';
-import { hash } from '../crypto';
+import { hash, signJWT } from '../crypto';
 
 export const resolvers = {
   Query: {
@@ -19,10 +19,13 @@ export const resolvers = {
         where: { email: args.email, password: hash(args.password, email + XSALT) },
       });
 
+      const token: string = signJWT(user.id);
+
       await connection.close();
+
       return {
         user,
-        token: 12,
+        token: token,
       };
     },
   },
