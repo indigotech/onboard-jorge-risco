@@ -34,5 +34,5 @@
     "tsconfig-paths-dist.js",
     "prod_node_modules"
   ],
-  "include": ["src/*", ".eslintrc.js"]
+  "include": ["src/*", ".eslintrc.ts"]
 }
