@@ -21,7 +21,7 @@ export const resolvers = {
 
       await connection.close();
       return {
-        user: { id: user.id, birthDate: user.birthDate, email: user.email, cpf: user.cpf },
+        user,
         token: 12,
       };
     },
