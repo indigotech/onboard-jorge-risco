@@ -10,7 +10,9 @@ export function hash(data: string, salt: string): string {
   return hashedString;
 }
 
-export function signJWT(userId: number) {
-  const token = jwt.sign({ userID: userId }, privateKey, { expiresIn: 200 });
+export function signJWT(userId: number, rememberMe: boolean) {
+  let expirationSeconds: number;
+  rememberMe ? (expirationSeconds = 604800) : (expirationSeconds = 120);
+  const token = jwt.sign({ userID: userId }, privateKey, { expiresIn: expirationSeconds });
   return token;
 }
