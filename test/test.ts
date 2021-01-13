@@ -1,14 +1,42 @@
 import * as assert from 'assert';
-import { testScript } from '../src/testScript';
+import * as request from 'supertest';
+import { runServer } from '../src/server';
 
-describe('testScript', () => {
-  it('should return "test ok!"', () => {
-    const expected = 'test ok!';
-    assert.equal(testScript(), expected);
+const url = `http://localhost:4000/`;
+
+before(async () => {
+  await runServer().catch((error) => {
+    console.log(`Something went wrong.\n${error.message}`);
   });
-  it('should have output string lenght of 8', () => {
-    const expected = 8;
-    const str = testScript();
-    assert.equal(str.length, expected);
+});
+
+describe('Query test', () => {
+  it('should return "Hello world!"', async () => {
+    const expected = 'Hello world!';
+
+    const query = {
+      query: `query{
+        hello
+      }`,
+    };
+
+    const response = await request(url).post('').send(query);
+    assert.equal(response.body.data.hello, expected);
+  });
+
+  it('should return user "Siclano"', async () => {
+    const expected = 'Siclano';
+
+    const query = {
+      query: `mutation{
+        login(email:"siclano@email.com", password: "best_password_ever"){
+          user{
+            name
+          }
+        }
+      }`,
+    };
+    const response = await request(url).post('').send(query);
+    assert.equal(response.body.data.login.user.name, expected);
   });
 });

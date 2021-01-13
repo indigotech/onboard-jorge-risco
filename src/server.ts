@@ -3,11 +3,20 @@ import { typeDefs } from './graphql/typeDefs';
 import { resolvers } from './graphql/resolvers';
 require('dotenv').config();
 
-const server = new ApolloServer({
-  typeDefs,
-  resolvers,
-});
+export async function runServer() {
+  const server = new ApolloServer({
+    typeDefs,
+    resolvers,
+  });
+  return server;
+}
 
-server.listen().then(({ url }) => {
-  console.log(`Server ready at ${url}`);
-});
+async function server() {
+  const server = await runServer().then((server) => {
+    server.listen().then(({ url }) => {
+      console.log(`Server ready at ${url}`);
+    });
+  });
+}
+
+server();
