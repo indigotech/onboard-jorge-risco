@@ -9,9 +9,6 @@ export const resolvers = {
   },
   Mutation: {
     login: async (_, args) => {
-      let rememberMe: boolean;
-      args.rememberMe ? (rememberMe = true) : (rememberMe = false);
-
       const email: string = args.email;
       const XSALT: string = process.env.XSALT;
 
@@ -22,7 +19,7 @@ export const resolvers = {
         where: { email: args.email, password: hash(args.password, email + XSALT) },
       });
 
-      const token: string = signJWT(user.id, rememberMe);
+      const token: string = signJWT(user.id, args.rememberMe);
 
       await connection.close();
 

@@ -11,8 +11,7 @@ export function hash(data: string, salt: string): string {
 }
 
 export function signJWT(userId: number, rememberMe: boolean) {
-  let expirationSeconds: number;
-  rememberMe ? (expirationSeconds = 604800) : (expirationSeconds = 120);
+  const expirationSeconds = rememberMe ? 604800 : 120;
   const token = jwt.sign({ userID: userId }, privateKey, { expiresIn: expirationSeconds });
   return token;
 }
