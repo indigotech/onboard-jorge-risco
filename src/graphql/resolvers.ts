@@ -19,7 +19,7 @@ export const resolvers = {
         where: { email: args.email, password: hash(args.password, email + XSALT) },
       });
 
-      const token: string = signJWT(user.id);
+      const token: string = signJWT(user.id, args.rememberMe);
 
       await connection.close();
 

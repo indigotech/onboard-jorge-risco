@@ -7,7 +7,8 @@ export function hash(data: string, salt: string): string {
   return hashedString;
 }
 
-export function signJWT(userId: number) {
-  const token = jwt.sign({ userID: userId }, process.env.JWTKEY, { expiresIn: 200 });
+export function signJWT(userId: number, rememberMe: boolean) {
+  const expirationSeconds = rememberMe ? 604800 : 120;
+  const token = jwt.sign({ userID: userId }, process.env.JWTKEY, { expiresIn: expirationSeconds });
   return token;
 }

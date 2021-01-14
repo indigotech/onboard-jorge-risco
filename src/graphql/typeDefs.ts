@@ -20,6 +20,6 @@ export const typeDefs = gql`
   }
 
   type Mutation {
-    login(email: String!, password: String!): LoginResponse
+    login(email: String!, password: String!, rememberMe: Boolean): LoginResponse
   }
 `;
