@@ -5,9 +5,11 @@ import { runServer } from '../src/server';
 const url = `http://localhost:4000/`;
 
 before(async () => {
-  await runServer().catch((error) => {
-    console.log(`Something went wrong.\n${error.message}`);
-  });
+  try {
+    await runServer();
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+  }
 });
 
 describe('Query test', () => {
