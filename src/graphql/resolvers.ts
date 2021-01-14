@@ -25,7 +25,7 @@ export const resolvers = {
 
       return {
         user,
-        token: token,
+        token,
       };
     },
   },
