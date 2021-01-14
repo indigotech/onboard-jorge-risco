@@ -6,8 +6,9 @@
   "scripts": {
     "start": "ts-node src/server.ts",
     "build": "tsc",
-    "build:dev": "nodemon --exec 'ts-node' src/server.ts",
-    "test": "mocha -r ts-node/register test/*"
+    "build:dev": "NODE_ENV=DEV nodemon --exec 'ts-node' src/server.ts",
+    "build:test": "NODE_ENV=TEST nodemon --exec 'ts-node' src/server.ts",
+    "test": "NODE_ENV=TEST mocha -r ts-node/register test/*"
   },
   "repository": {
     "type": "git",
@@ -33,7 +34,6 @@
     "typeorm": "0.2.29"
   },
   "devDependencies": {
-    "@types/chai": "4.2.14",
     "@types/mocha": "8.2.0",
     "@types/node": "8.0.29",
     "@types/supertest": "2.0.10",

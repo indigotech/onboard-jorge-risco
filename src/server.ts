@@ -1,8 +1,9 @@
 import { ApolloServer } from 'apollo-server';
 import { typeDefs } from './graphql/typeDefs';
 import { resolvers } from './graphql/resolvers';
+import { environmentConfig } from './environment-config';
 
-require('dotenv').config();
+environmentConfig();
 
 export async function runServer() {
   const server = new ApolloServer({

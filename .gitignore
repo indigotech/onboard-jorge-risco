@@ -5,3 +5,5 @@ build/
 tmp/
 temp/
 .env
+.env.dev
+.env.test
