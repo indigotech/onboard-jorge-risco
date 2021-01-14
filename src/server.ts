@@ -1,6 +1,7 @@
 import { ApolloServer } from 'apollo-server';
 import { typeDefs } from './graphql/typeDefs';
 import { resolvers } from './graphql/resolvers';
+
 require('dotenv').config();
 
 export async function runServer() {
@@ -8,15 +9,15 @@ export async function runServer() {
     typeDefs,
     resolvers,
   });
-  return server;
+
+  try {
+    const { url } = await server.listen();
+    console.log(`Server ready at ${url}`);
+  } catch (error) {
+    console.log(`error: ${error.message}`);
+  }
 }
 
-async function server() {
-  const server = await runServer().then((server) => {
-    server.listen().then(({ url }) => {
-      console.log(`Server ready at ${url}`);
-    });
-  });
+if (require.main === module) {
+  runServer();
 }
-
-server();
