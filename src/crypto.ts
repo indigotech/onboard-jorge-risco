@@ -12,3 +12,13 @@ export function signJWT(userId: number, rememberMe: boolean) {
   const token = jwt.sign({ userID: userId }, process.env.JWTKEY, { expiresIn: expirationSeconds });
   return token;
 }
+
+export function checkToken(token: string) {
+  jwt.verify(token, process.env.JWTKEY, function (err, decoded) {
+    if (err) {
+      console.log(`${err.name}: ${err.message}`);
+    } else {
+      console.log('Token OK');
+    }
+  });
+}
