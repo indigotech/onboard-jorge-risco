@@ -4,7 +4,7 @@ import { resolvers } from './graphql/resolvers';
 import { environmentConfig } from './environment-config';
 
 environmentConfig();
-
+console.log(`SELECTED ENVIRONMENT: ${process.env.ENVNAME}`);
 export async function runServer() {
   const server = new ApolloServer({
     typeDefs,
