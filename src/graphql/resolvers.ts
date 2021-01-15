@@ -1,4 +1,4 @@
-import { getRepository, createConnection } from 'typeorm';
+import { getRepository } from 'typeorm';
 import { User } from '../entity/User';
 import { hash, signJWT } from '../crypto';
 
@@ -12,7 +12,6 @@ export const resolvers = {
       const email: string = args.email;
       const XSALT: string = process.env.XSALT;
 
-      const connection = await createConnection();
       const usersRepository = getRepository(User);
 
       const user = await usersRepository.findOne({
@@ -20,8 +19,6 @@ export const resolvers = {
       });
 
       const token: string = signJWT(user.id, args.rememberMe);
-
-      await connection.close();
 
       return {
         user,
