@@ -1,7 +1,7 @@
 import * as request from 'supertest';
 import { runServer } from '../src/server';
 import { expect } from 'chai';
-import { checkToken } from '../src/crypto';
+import { checkToken, hash } from '../src/crypto';
 import { getRepository, Repository } from 'typeorm';
 import { User } from '../src/entity/User';
 import { validateEmail } from '../src/validation';
@@ -44,14 +44,9 @@ describe('Login Mutation test', async () => {
   it('should return user "Fulano"', async () => {
     const email = 'fulano@email.com';
     const password = 'dumb_password';
+    const hashedPassword = hash(password, email + process.env.XSALT);
     const query = requestLogin(email, password, false);
-    if (!validateEmail(email)) {
-      throw new Error('Invalid email format.');
-    }
-    const userWithSameCredentials = await getRepository(User).findOne({ email });
-    if (!userWithSameCredentials) {
-      throw new Error("That email can't be found on our database.");
-    }
+    await credentialValidation(email, hashedPassword);
 
     const response = await request(url).post('').send(query);
 
@@ -63,6 +58,16 @@ describe('Login Mutation test', async () => {
     expect(response.body.data.login.user.cpf).to.be.eq('1');
   });
 });
+
+async function credentialValidation(email: string, hashedPassword: string) {
+  if (!validateEmail(email)) {
+    throw new Error('Invalid email format.');
+  }
+  const userWithSameCredentials = await getRepository(User).findOne({ email, password: hashedPassword });
+  if (!userWithSameCredentials) {
+    throw new Error('Wrong credentials.');
+  }
+}
 
 function requestLogin(email: string, password: string, rememberMe: boolean) {
   return {
