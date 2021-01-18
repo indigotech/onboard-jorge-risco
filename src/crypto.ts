@@ -13,14 +13,6 @@ export function signJWT(userId: number, rememberMe: boolean) {
 }
 
 export function checkToken(token: string): boolean {
-  jwt.verify(token, process.env.JWTKEY, function (err, decoded) {
-    if (err) {
-      console.log(`${err.name}: ${err.message}`);
-    } else {
-      console.log('Token OK');
-    }
-  });
-
   let tokenInfo = getDecodedAccessToken(token);
   const tokenExpiration = tokenInfo.exp;
   if (Date.now() <= tokenExpiration * 1000) {

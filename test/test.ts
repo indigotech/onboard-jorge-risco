@@ -33,8 +33,8 @@ describe('Query test', () => {
 
 describe('Login Mutation test', async () => {
   beforeEach(async () => {
-    addUser('Fulano', 'fulano@email.com', '1444-01-01', '1', 'jAiLPQV92PZK9Aen8Bl54WDbpUk8LBN05dJsZC6+QfU=');
-    addUser('Ciclano', 'ciclano@email.com', '1444-01-01', '2', 'jAiLPQV92PZK9Aen8Bl54WDbpUk8LBN05dJsZC6+QfU=');
+    await addUser('Fulano', 'fulano@email.com', '1444-01-01', '1', 'jAiLPQV92PZK9Aen8Bl54WDbpUk8LBN05dJsZC6+QfU=');
+    await addUser('Ciclano', 'ciclano@email.com', '1444-01-01', '2', 'jAiLPQV92PZK9Aen8Bl54WDbpUk8LBN05dJsZC6+QfU=');
   });
 
   afterEach(async () => {
@@ -45,8 +45,6 @@ describe('Login Mutation test', async () => {
     const query = requestLogin('fulano@email.com', 'dumb_password', false);
     const response = await request(url).post('').send(query);
 
-    console.log(response.body.data.login.user);
-
     expect(checkToken(response.body.data.login.token)).to.be.eq(true);
     expect(response.body.data.login.user.name).to.be.eq('Fulano');
     expect(response.body.data.login.user.email).to.be.eq('fulano@email.com');
@@ -56,7 +54,7 @@ describe('Login Mutation test', async () => {
 });
 
 function requestLogin(email: string, password: string, rememberMe: boolean) {
-  const query = {
+  return {
     query: `mutation{
       login(email:"${email}" password:"${password}" rememberMe:${rememberMe}){
         user{
@@ -73,7 +71,6 @@ function requestLogin(email: string, password: string, rememberMe: boolean) {
     
     }`,
   };
-  return query;
 }
 
 async function addUser(name: string, email: string, birthDate: string, cpf: string, password: string) {
