@@ -1,7 +1,6 @@
 import * as request from 'supertest';
 import { runServer } from '../src/server';
 import { expect } from 'chai';
-
 import { checkToken } from '../src/crypto';
 import { getRepository, Repository } from 'typeorm';
 import { User } from '../src/entity/User';
@@ -43,11 +42,17 @@ describe('Login Mutation test', async () => {
   });
 
   it('should return user "Fulano"', async () => {
-    const email = 'fulanomail.com';
-    const query = requestLogin(email, 'dumb_password', false);
+    const email = 'fulano@email.com';
+    const password = 'dumb_password';
+    const query = requestLogin(email, password, false);
     if (!validateEmail(email)) {
       throw new Error('Invalid email format.');
     }
+    const userWithSameCredentials = await getRepository(User).findOne({ email });
+    if (!userWithSameCredentials) {
+      throw new Error("That email can't be found on our database.");
+    }
+
     const response = await request(url).post('').send(query);
 
 <<<<<<< HEAD
