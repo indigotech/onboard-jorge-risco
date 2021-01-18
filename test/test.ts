@@ -44,7 +44,6 @@ describe('Login Mutation test', async () => {
   it('should return user "Fulano"', async () => {
     const email = 'fulano@email.com';
     const password = 'dumb_password';
-    const hashedPassword = hash(password, email + process.env.XSALT);
     const query = requestLogin(email, password, false);
 
     const response = await request(url).post('').send(query);
@@ -55,6 +54,16 @@ describe('Login Mutation test', async () => {
     expect(response.body.data.login.user.email).to.be.eq('fulano@email.com');
     expect(response.body.data.login.user.birthDate).to.be.eq('1444-01-01');
     expect(response.body.data.login.user.cpf).to.be.eq('1');
+  });
+
+  it('should return error: "Invalid email format"', async () => {
+    const email = '---___---===1203';
+    const password = 'dumb_password';
+    const query = requestLogin(email, password, false);
+
+    await request(url).post('').send(query);
+
+    expect(validateEmail(email)).to.be.eq(false);
   });
 });
 
