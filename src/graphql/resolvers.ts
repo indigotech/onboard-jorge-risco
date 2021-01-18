@@ -1,6 +1,7 @@
 import { getRepository } from 'typeorm';
 import { User } from '../entity/User';
 import { hash, signJWT } from '../crypto';
+import { validateEmail } from '../validation';
 
 export const resolvers = {
   Query: {
@@ -13,7 +14,7 @@ export const resolvers = {
       const XSALT: string = process.env.XSALT;
 
       const usersRepository = getRepository(User);
-
+      await credentialValidation(args.email, hash(args.password, email + XSALT));
       const user = await usersRepository.findOne({
         where: { email: args.email, password: hash(args.password, email + XSALT) },
       });
@@ -27,3 +28,13 @@ export const resolvers = {
     },
   },
 };
+
+async function credentialValidation(email: string, hashedPassword: string) {
+  if (!validateEmail(email)) {
+    throw new Error('Invalid email format.');
+  }
+  const userWithSameCredentials = await getRepository(User).findOne({ email, password: hashedPassword });
+  if (!userWithSameCredentials) {
+    throw new Error('Wrong credentials.');
+  }
+}

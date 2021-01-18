@@ -11,6 +11,13 @@ export async function runServer() {
   const server = new ApolloServer({
     typeDefs,
     resolvers,
+    formatError: (error) => {
+      console.log(`Error: ${error.extensions.code}\nMessage: ${error.message}`);
+      return {
+        code: error.extensions.code, // Conveniently equal to the HTTP Status Code
+        message: error.message,
+      };
+    },
   });
 
   try {
