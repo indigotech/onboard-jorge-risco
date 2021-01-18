@@ -55,11 +55,7 @@ describe('Login Mutation test', async () => {
 
     const response = await request(url).post('').send(query);
 
-<<<<<<< HEAD
-=======
-    console.log(response.body.data.login.user);
     expect(validateEmail(email)).to.be.eq(true);
->>>>>>> 6642f6a... added email validation function
     expect(checkToken(response.body.data.login.token)).to.be.eq(true);
     expect(response.body.data.login.user.name).to.be.eq('Fulano');
     expect(response.body.data.login.user.email).to.be.eq('fulano@email.com');
