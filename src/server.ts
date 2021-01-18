@@ -14,7 +14,7 @@ export async function runServer() {
     formatError: (error) => {
       console.log(`Error: ${error.extensions.code}\nMessage: ${error.message}`);
       return {
-        code: error.extensions.code, // Conveniently equal to the HTTP Status Code
+        code: error.extensions.code,
         message: error.message,
       };
     },
