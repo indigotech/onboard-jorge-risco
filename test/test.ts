@@ -2,17 +2,16 @@ import * as request from 'supertest';
 import { runServer } from '../src/server';
 import { expect } from 'chai';
 
-const url = `http://localhost:4000/`;
-
-before(async () => {
-  try {
-    await runServer();
-  } catch (error) {
-    console.log(`Error: ${error.message}`);
-  }
-});
+const url = `http://localhost:${process.env.SERVERPORT}/`;
 
 describe('Query test', () => {
+  before(async () => {
+    try {
+      await runServer();
+    } catch (error) {
+      console.log(`Error: ${error.message}`);
+    }
+  });
   it('should return "Hello world!"', async () => {
     const query = {
       query: `query{
