@@ -1,6 +1,5 @@
 import * as crypto from 'crypto';
 import * as jwt from 'jsonwebtoken';
-
 export function hash(data: string, salt: string): string {
   const unhashedString = data + salt;
   const hashedString: string = crypto.createHash('sha256').update(unhashedString).digest('base64');
@@ -13,7 +12,7 @@ export function signJWT(userId: number, rememberMe: boolean) {
   return token;
 }
 
-export function checkToken(token: string) {
+export function checkToken(token: string): boolean {
   jwt.verify(token, process.env.JWTKEY, function (err, decoded) {
     if (err) {
       console.log(`${err.name}: ${err.message}`);
@@ -21,4 +20,18 @@ export function checkToken(token: string) {
       console.log('Token OK');
     }
   });
+
+  let tokenInfo = getDecodedAccessToken(token);
+  const tokenExpiration = tokenInfo.exp;
+  if (Date.now() <= tokenExpiration * 1000) {
+    return true;
+  }
+}
+
+function getDecodedAccessToken(token: string): any {
+  try {
+    return jwt.decode(token);
+  } catch (error) {
+    console.log(error);
+  }
 }
