@@ -5,6 +5,7 @@ import { expect } from 'chai';
 import { checkToken } from '../src/crypto';
 import { getRepository, Repository } from 'typeorm';
 import { User } from '../src/entity/User';
+import { validateEmail } from '../src/validation';
 
 let usersRepo: Repository<User>;
 before(async () => {
@@ -42,9 +43,18 @@ describe('Login Mutation test', async () => {
   });
 
   it('should return user "Fulano"', async () => {
-    const query = requestLogin('fulano@email.com', 'dumb_password', false);
+    const email = 'fulanomail.com';
+    const query = requestLogin(email, 'dumb_password', false);
+    if (!validateEmail(email)) {
+      throw new Error('Invalid email format.');
+    }
     const response = await request(url).post('').send(query);
 
+<<<<<<< HEAD
+=======
+    console.log(response.body.data.login.user);
+    expect(validateEmail(email)).to.be.eq(true);
+>>>>>>> 6642f6a... added email validation function
     expect(checkToken(response.body.data.login.token)).to.be.eq(true);
     expect(response.body.data.login.user.name).to.be.eq('Fulano');
     expect(response.body.data.login.user.email).to.be.eq('fulano@email.com');
