@@ -63,7 +63,28 @@ describe('Login Mutation test', async () => {
 
     await request(url).post('').send(query);
 
-    expect(validateEmail(email)).to.be.eq(false);
+    const response = await request(url).post('').send(query);
+    expect(response.body.errors[0].message).to.be.eq('Invalid email format.');
+  });
+  it('[wrong password] should return error: "Wrong credentials"', async () => {
+    const email = 'fulano@email.com';
+    const password = 'WRONG-PASSWORD!';
+    const query = requestLogin(email, password, false);
+
+    await request(url).post('').send(query);
+
+    const response = await request(url).post('').send(query);
+    expect(response.body.errors[0].message).to.be.eq('Wrong credentials.');
+  });
+  it('[wrong email] should return error: "Wrong credentials"', async () => {
+    const email = 'random@email.com';
+    const password = 'dumb_password';
+    const query = requestLogin(email, password, false);
+
+    await request(url).post('').send(query);
+
+    const response = await request(url).post('').send(query);
+    expect(response.body.errors[0].message).to.be.eq('Wrong credentials.');
   });
 });
 
