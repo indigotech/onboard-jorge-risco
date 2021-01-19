@@ -10,13 +10,12 @@ export const resolvers = {
   },
   Mutation: {
     login: async (_, args) => {
-      const email: string = args.email;
-      const XSALT: string = process.env.XSALT;
-
       const usersRepository = getRepository(User);
-      await validateCredentials(args.email, hash(args.password, email + XSALT));
+      const email: string = args.email;
+
+      await validateCredentials(args.email, hash(args.password, email));
       const user = await usersRepository.findOne({
-        where: { email: args.email, password: hash(args.password, email + XSALT) },
+        where: { email: args.email, password: hash(args.password, email) },
       });
 
       const token: string = signJWT(user.id, args.rememberMe);
@@ -25,6 +24,40 @@ export const resolvers = {
         user,
         token,
       };
+    },
+    createUser: async (_, args) => {
+      const usersRepository = getRepository(User);
+      const name = args.name;
+      const email = args.email;
+      const birthDate = args.birthDate;
+      const cpf = args.cpf;
+      const password = hash(args.password, args.email);
+
+      if (!validateEmail(email)) {
+        throw new Error('Invalid email format.');
+      }
+
+      const userWithSameEmail = await usersRepository.findOne({
+        where: { email },
+      });
+      if (userWithSameEmail) {
+        throw new Error('Email already used, try another email address.');
+      }
+
+      const newUser = usersRepository.create({
+        name,
+        email,
+        birthDate,
+        cpf,
+        password,
+      });
+      await usersRepository.save(newUser);
+
+      const user = await usersRepository.findOne({
+        where: { email, password },
+      });
+
+      return user;
     },
   },
 };

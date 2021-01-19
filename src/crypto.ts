@@ -1,7 +1,8 @@
 import * as crypto from 'crypto';
 import * as jwt from 'jsonwebtoken';
-export function hash(data: string, salt: string): string {
-  const unhashedString = data + salt;
+
+export function hash(data: string, email: string): string {
+  const unhashedString = data + email + process.env.XSALT;
   const hashedString: string = crypto.createHash('sha256').update(unhashedString).digest('base64');
   return hashedString;
 }

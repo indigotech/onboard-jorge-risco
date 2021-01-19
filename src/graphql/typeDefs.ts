@@ -21,5 +21,13 @@ export const typeDefs = gql`
 
   type Mutation {
     login(email: String!, password: String!, rememberMe: Boolean): LoginResponse
+    createUser(
+      token: String!
+      name: String!
+      email: String!
+      birthDate: String!
+      cpf: String!
+      password: String!
+    ): User!
   }
 `;
