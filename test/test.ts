@@ -126,7 +126,7 @@ describe('Login Mutation test', async () => {
     const response2 = await request(url).post('').send(query2);
 
     expect(response2.body.errors[0].code).to.be.eq('INTERNAL_SERVER_ERROR');
-    expect(response2.body.errors[0].message).to.be.eq('Expired token, please log in again.');
+    expect(response2.body.errors[0].message).to.be.eq('Expired or invalid token, please log in again.');
   });
 });
 
