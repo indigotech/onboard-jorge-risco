@@ -20,7 +20,7 @@ export function checkToken(token: string): boolean {
     tokenInfo = getDecodedAccessToken(token);
     tokenExpiration = tokenInfo.exp;
   } catch (error) {
-    throw new Error(`Could not decode token. It might not be valid. Try logging in again to generate a new token.`);
+    throw new Error('Could not decode token. It might not be valid. Try logging in again to generate a new token.');
   }
 
   if (Date.now() <= tokenExpiration * 1000) {

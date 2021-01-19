@@ -88,6 +88,46 @@ describe('Login Mutation test', async () => {
     expect(response.body.errors[0].code).to.be.eq('INTERNAL_SERVER_ERROR');
     expect(response.body.errors[0].message).to.be.eq('Wrong credentials.');
   });
+  it('should log in and then create a new user', async () => {
+    //Logging in
+    const email = 'fulano@email.com';
+    const password = 'dumb_password';
+    const query = requestLogin(email, password, false);
+
+    const response = await request(url).post('').send(query);
+    const token: string = response.body.data.login.token;
+
+    expect(checkToken(token)).to.be.eq(true);
+    //Creating user
+
+    const query2 = createUserRequest(token);
+
+    const response2 = await request(url).post('').send(query2);
+
+    expect(response2.body.data.createUser.name).to.be.eq('NewGuy');
+    expect(response2.body.data.createUser.email).to.be.eq('newguy@email.com');
+    expect(response2.body.data.createUser.birthDate).to.be.eq('01-01-01');
+    expect(response2.body.data.createUser.cpf).to.be.eq('3');
+  });
+  it('[Expired token] should return expired token error when trying to create user', async () => {
+    //Logging in
+    const email = 'fulano@email.com';
+    const password = 'dumb_password';
+    const query = requestLogin(email, password, false);
+
+    const response = await request(url).post('').send(query);
+    const token: string =
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOjc5OCwiaWF0IjoxNjExMDc1NDQ0LCJleHAiOjE2MTEwNzU1NjR9.BcHGkTDMIkB8RdAwIaLT04gO8O2J6RrCsfFlp9hAFEQ';
+
+    //Creating user
+
+    const query2 = createUserRequest(token);
+
+    const response2 = await request(url).post('').send(query2);
+
+    expect(response2.body.errors[0].code).to.be.eq('INTERNAL_SERVER_ERROR');
+    expect(response2.body.errors[0].message).to.be.eq('Expired token, please log in again.');
+  });
 });
 
 function requestLogin(email: string, password: string, rememberMe: boolean) {
@@ -109,7 +149,26 @@ function requestLogin(email: string, password: string, rememberMe: boolean) {
     }`,
   };
 }
-
+function createUserRequest(token: string) {
+  return {
+    query: `mutation{
+      createUser(
+        token:"${token}",
+        name:"NewGuy",
+        email:"newguy@email.com",
+        birthDate:"01-01-01",
+        cpf:"3",
+        password:"dumb_password"
+      ) {
+        id
+        name
+        email
+        birthDate
+        cpf
+      }
+      }`,
+  };
+}
 async function addUser(name: string, email: string, birthDate: string, cpf: string, password: string) {
   const newUser = usersRepo.create({
     name,
