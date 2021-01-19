@@ -14,7 +14,7 @@ export const resolvers = {
       const XSALT: string = process.env.XSALT;
 
       const usersRepository = getRepository(User);
-      await credentialValidation(args.email, hash(args.password, email + XSALT));
+      await validateCredentials(args.email, hash(args.password, email + XSALT));
       const user = await usersRepository.findOne({
         where: { email: args.email, password: hash(args.password, email + XSALT) },
       });
@@ -29,7 +29,7 @@ export const resolvers = {
   },
 };
 
-async function credentialValidation(email: string, hashedPassword: string) {
+async function validateCredentials(email: string, hashedPassword: string) {
   if (!validateEmail(email)) {
     throw new Error('Invalid email format.');
   }
