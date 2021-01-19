@@ -74,6 +74,7 @@ describe('Login Mutation test', async () => {
     await request(url).post('').send(query);
 
     const response = await request(url).post('').send(query);
+    expect(response.body.errors[0].code).to.be.eq('INTERNAL_SERVER_ERROR');
     expect(response.body.errors[0].message).to.be.eq('Wrong credentials.');
   });
   it('[wrong email] should return error: "Wrong credentials"', async () => {
@@ -84,6 +85,7 @@ describe('Login Mutation test', async () => {
     await request(url).post('').send(query);
 
     const response = await request(url).post('').send(query);
+    expect(response.body.errors[0].code).to.be.eq('INTERNAL_SERVER_ERROR');
     expect(response.body.errors[0].message).to.be.eq('Wrong credentials.');
   });
 });
