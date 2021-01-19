@@ -35,7 +35,7 @@ export const resolvers = {
       const password = hash(args.password, args.email);
 
       if (!checkToken(token)) {
-        throw new Error('Expired token, please log in again.');
+        throw new Error('Expired or invalid token, please log in again.');
       }
       if (!validateEmail(email)) {
         throw new Error('Invalid email format.');
