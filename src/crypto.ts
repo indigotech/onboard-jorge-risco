@@ -14,10 +14,19 @@ export function signJWT(userId: number, rememberMe: boolean) {
 }
 
 export function checkToken(token: string): boolean {
-  let tokenInfo = getDecodedAccessToken(token);
-  const tokenExpiration = tokenInfo.exp;
+  let tokenInfo;
+  let tokenExpiration;
+  try {
+    tokenInfo = getDecodedAccessToken(token);
+    tokenExpiration = tokenInfo.exp;
+  } catch (error) {
+    throw new Error(`Could not decode token. It might not be valid. Try logging in again to generate a new token.`);
+  }
+
   if (Date.now() <= tokenExpiration * 1000) {
     return true;
+  } else {
+    return false;
   }
 }
 

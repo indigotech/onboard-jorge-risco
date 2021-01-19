@@ -1,6 +1,6 @@
 import { getRepository } from 'typeorm';
 import { User } from '../entity/User';
-import { hash, signJWT } from '../crypto';
+import { hash, signJWT, checkToken } from '../crypto';
 import { validateEmail } from '../validation';
 
 export const resolvers = {
@@ -27,12 +27,16 @@ export const resolvers = {
     },
     createUser: async (_, args) => {
       const usersRepository = getRepository(User);
+      const token = args.token;
       const name = args.name;
       const email = args.email;
       const birthDate = args.birthDate;
       const cpf = args.cpf;
       const password = hash(args.password, args.email);
 
+      if (!checkToken(token)) {
+        throw new Error('Expired token, please log in again.');
+      }
       if (!validateEmail(email)) {
         throw new Error('Invalid email format.');
       }
