@@ -33,8 +33,8 @@ describe('Query test', () => {
 
 describe('Login Mutation test', async () => {
   beforeEach(async () => {
-    await addUser('Fulano', 'fulano@email.com', '1444-01-01', '1', 'jAiLPQV92PZK9Aen8Bl54WDbpUk8LBN05dJsZC6+QfU=');
-    await addUser('Ciclano', 'ciclano@email.com', '1444-01-01', '2', 'jAiLPQV92PZK9Aen8Bl54WDbpUk8LBN05dJsZC6+QfU=');
+    await addUser('Fulano', 'fulano@email.com', '1444-01-01', '1', 'arX9hAzm1KP18VqkBkw/CSuyhtPjOjo21Z4PdHM5f7Y=');
+    await addUser('Ciclano', 'ciclano@email.com', '1444-01-01', '2', 'arX9hAzm1KP18VqkBkw/CSuyhtPjOjo21Z4PdHM5f7Y=');
   });
 
   afterEach(async () => {
@@ -43,7 +43,7 @@ describe('Login Mutation test', async () => {
 
   it('should return user "Fulano"', async () => {
     const email = 'fulano@email.com';
-    const password = 'dumb_password';
+    const password = 'dumb_password123';
     const query = requestLogin(email, password, false);
 
     const response = await request(url).post('').send(query);
@@ -58,7 +58,7 @@ describe('Login Mutation test', async () => {
 
   it('should return error: "Invalid email format"', async () => {
     const email = '---___---===1203';
-    const password = 'dumb_password';
+    const password = 'dumb_password123';
     const query = requestLogin(email, password, false);
 
     await request(url).post('').send(query);
@@ -79,7 +79,7 @@ describe('Login Mutation test', async () => {
   });
   it('[wrong email] should return error: "Wrong credentials"', async () => {
     const email = 'random@email.com';
-    const password = 'dumb_password';
+    const password = 'dumb_password123';
     const query = requestLogin(email, password, false);
 
     await request(url).post('').send(query);
@@ -91,7 +91,7 @@ describe('Login Mutation test', async () => {
   it('should log in and then create a new user', async () => {
     //Logging in
     const email = 'fulano@email.com';
-    const password = 'dumb_password';
+    const password = 'dumb_password123';
     const query = requestLogin(email, password, false);
 
     const response = await request(url).post('').send(query);
@@ -112,7 +112,7 @@ describe('Login Mutation test', async () => {
   it('[Expired token] should return expired token error when trying to create user', async () => {
     //Logging in
     const email = 'fulano@email.com';
-    const password = 'dumb_password';
+    const password = 'dumb_password123';
     const query = requestLogin(email, password, false);
 
     const response = await request(url).post('').send(query);
@@ -158,7 +158,7 @@ function createUserRequest(token: string) {
         email:"newguy@email.com",
         birthDate:"01-01-01",
         cpf:"3",
-        password:"dumb_password"
+        password:"dumb_password123"
       ) {
         id
         name

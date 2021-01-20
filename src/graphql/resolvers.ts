@@ -38,7 +38,7 @@ export const resolvers = {
       if (!validateEmail(email)) {
         throw new Error('Invalid email format.');
       }
-      validatePassword(password);
+      // validatePassword(password);
 
       const userWithSameEmail = await usersRepository.findOne({
         where: { email },
