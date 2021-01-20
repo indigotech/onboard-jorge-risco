@@ -54,11 +54,7 @@ export const resolvers = {
         cpf,
         password,
       });
-      await usersRepository.save(newUser);
-
-      const user = await usersRepository.findOne({
-        where: { email, password },
-      });
+      const user = await usersRepository.save(newUser);
 
       return user;
     },
