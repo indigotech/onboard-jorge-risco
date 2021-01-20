@@ -1,7 +1,7 @@
 import { getRepository } from 'typeorm';
 import { User } from '../entity/User';
 import { hash, signJWT, checkToken } from '../crypto';
-import { validateEmail, validatePassowrd } from '../validation';
+import { validateEmail, validatePassword } from '../validation';
 
 export const resolvers = {
   Query: {
@@ -38,7 +38,7 @@ export const resolvers = {
       if (!validateEmail(email)) {
         throw new Error('Invalid email format.');
       }
-      validatePassowrd(password);
+      validatePassword(password);
 
       const userWithSameEmail = await usersRepository.findOne({
         where: { email },
