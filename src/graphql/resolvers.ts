@@ -1,7 +1,7 @@
 import { getRepository } from 'typeorm';
 import { User } from '../entity/User';
 import { hash, signJWT, checkToken } from '../crypto';
-import { validateEmail } from '../validation';
+import { validateEmail, validatePassowrd } from '../validation';
 
 export const resolvers = {
   Query: {
@@ -34,12 +34,11 @@ export const resolvers = {
       const cpf = args.cpf;
       const password = hash(args.password, args.email);
 
-      if (!checkToken(token)) {
-        throw new Error('Expired or invalid token, please log in again.');
-      }
+      checkToken(token);
       if (!validateEmail(email)) {
         throw new Error('Invalid email format.');
       }
+      validatePassowrd(password);
 
       const userWithSameEmail = await usersRepository.findOne({
         where: { email },

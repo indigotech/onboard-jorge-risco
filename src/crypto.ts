@@ -26,7 +26,7 @@ export function checkToken(token: string): boolean {
   if (Date.now() <= tokenExpiration * 1000) {
     return true;
   } else {
-    return false;
+    throw new Error('Expired or invalid token, please log in again.');
   }
 }
 
