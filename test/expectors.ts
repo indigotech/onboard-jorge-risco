@@ -21,3 +21,9 @@ export function checkResponse(queryType: string, response: request.Response, use
     }
   }
 }
+
+export function checkError(response, errorCode, errorName, errorMessage) {
+  expect(response.body.errors[0].code).to.be.eq(errorCode);
+  expect(response.body.errors[0].error).to.be.eq(errorName);
+  expect(response.body.errors[0].message).to.be.eq(errorMessage);
+}

@@ -12,9 +12,21 @@ export async function runServer() {
     typeDefs,
     resolvers,
     formatError: (error) => {
-      console.log(`Error: ${error.extensions.code}\nMessage: ${error.message}`);
+      let code: number;
+      switch (error.extensions.code) {
+        case 'FORBIDDEN':
+          code = 403;
+          break;
+        case 'UNAUTHENTICATED':
+          code = 401;
+          break;
+        case 'BAD_USER_INPUT':
+          code = 422;
+      }
+      console.log(`Code: ${code}\nError: ${error.extensions.code}\nMessage: ${error.message}`);
       return {
-        code: error.extensions.code,
+        code: code,
+        error: error.extensions.code,
         message: error.message,
       };
     },

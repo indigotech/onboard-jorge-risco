@@ -6,7 +6,7 @@ import { getRepository, Repository } from 'typeorm';
 import { User } from '../src/entity/User';
 import { validateEmail } from '../src/validation';
 import * as testUser from './test_users';
-import { checkResponse } from './expectors';
+import { checkResponse, checkError } from './expectors';
 
 let usersRepo: Repository<User>;
 const fulano = testUser.Fulano;
@@ -73,8 +73,11 @@ describe('Login Mutation test', async () => {
     await request(url).post('').send(query);
 
     const response = await request(url).post('').send(query);
-    expect(response.body.errors[0].code).to.be.eq('INTERNAL_SERVER_ERROR');
-    expect(response.body.errors[0].message).to.be.eq('Wrong credentials.');
+
+    const errorCode = 422;
+    const errorName = 'BAD_USER_INPUT';
+    const errorMessage = 'Wrong credentials.';
+    checkError(response, errorCode, errorName, errorMessage);
   });
   it('[wrong email] should return error: "Wrong credentials"', async () => {
     const email = 'random@email.com';
@@ -84,8 +87,11 @@ describe('Login Mutation test', async () => {
     await request(url).post('').send(query);
 
     const response = await request(url).post('').send(query);
-    expect(response.body.errors[0].code).to.be.eq('INTERNAL_SERVER_ERROR');
-    expect(response.body.errors[0].message).to.be.eq('Wrong credentials.');
+
+    const errorCode = 422;
+    const errorName = 'BAD_USER_INPUT';
+    const errorMessage = 'Wrong credentials.';
+    checkError(response, errorCode, errorName, errorMessage);
   });
   it('should input valid token and then create a new user', async () => {
     const token = signJWT(1, false);
@@ -108,8 +114,20 @@ describe('Login Mutation test', async () => {
 
     const response = await request(url).post('').send(query);
 
-    expect(response.body.errors[0].code).to.be.eq('INTERNAL_SERVER_ERROR');
-    expect(response.body.errors[0].message).to.be.eq('Expired or invalid token, please log in again.');
+    const errorCode = 401;
+    const errorName = 'UNAUTHENTICATED';
+    const errorMessage = 'Expired or invalid token, please log in again.';
+    checkError(response, errorCode, errorName, errorMessage);
+  });
+  it('should return "Email already used', async () => {
+    const token = signJWT(1, false);
+    const query = createUserRequest(fulano, token);
+    const response = await request(url).post('').send(query);
+
+    const errorCode = 403;
+    const errorName = 'FORBIDDEN';
+    const errorMessage = 'Email already used, try another email address.';
+    checkError(response, errorCode, errorName, errorMessage);
   });
 });
 

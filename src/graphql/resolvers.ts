@@ -2,6 +2,7 @@ import { getRepository } from 'typeorm';
 import { User } from '../entity/User';
 import { hash, signJWT, checkToken } from '../crypto';
 import { validateEmail, validatePassword } from '../validation';
+import { AuthenticationError, ForbiddenError, UserInputError } from 'apollo-server';
 
 export const resolvers = {
   Query: {
@@ -36,7 +37,7 @@ export const resolvers = {
 
       checkToken(token);
       if (!validateEmail(email)) {
-        throw new Error('Invalid email format.');
+        throw new AuthenticationError('Invalid email format.');
       }
       // validatePassword(password);
 
@@ -44,7 +45,7 @@ export const resolvers = {
         where: { email },
       });
       if (userWithSameEmail) {
-        throw new Error('Email already used, try another email address.');
+        throw new ForbiddenError('Email already used, try another email address.');
       }
 
       const newUser = usersRepository.create({
@@ -63,10 +64,10 @@ export const resolvers = {
 
 async function validateCredentials(email: string, hashedPassword: string) {
   if (!validateEmail(email)) {
-    throw new Error('Invalid email format.');
+    throw new UserInputError('Invalid email format.');
   }
   const userWithSameCredentials = await getRepository(User).findOne({ email, password: hashedPassword });
   if (!userWithSameCredentials) {
-    throw new Error('Wrong credentials.');
+    throw new UserInputError('Wrong credentials.');
   }
 }
