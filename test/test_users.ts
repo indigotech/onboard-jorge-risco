@@ -20,3 +20,4 @@ export class testUser {
 export const Fulano = new testUser('Fulano', 'fulano@email.com', '1444-01-01', '1', 'dumb_password123');
 export const Ciclano = new testUser('Ciclano', 'ciclano@email.com', '1444-01-01', '2', 'dumb_password123');
 export const newGuy = new testUser('newGuy', 'newguy@email.com', '01-01-01', '3', 'dumb_password123');
+export const weakPasswordGuy = new testUser('weakPasswordGuy', 'weak@email.com', '02-02-02', '4', 'senha');

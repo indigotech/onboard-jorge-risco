@@ -12,6 +12,7 @@ let usersRepo: Repository<User>;
 const fulano = testUser.Fulano;
 const ciclano = testUser.Ciclano;
 const newGuy = testUser.newGuy;
+const weakPasswordGuy = testUser.weakPasswordGuy;
 
 before(async () => {
   try {
@@ -119,7 +120,7 @@ describe('Login Mutation test', async () => {
     const errorMessage = 'Expired or invalid token, please log in again.';
     checkError(response, errorCode, errorName, errorMessage);
   });
-  it('should return "Email already used', async () => {
+  it('should return "Email already used"', async () => {
     const token = signJWT(1, false);
     const query = createUserRequest(fulano, token);
     const response = await request(url).post('').send(query);
@@ -127,6 +128,15 @@ describe('Login Mutation test', async () => {
     const errorCode = 403;
     const errorName = 'FORBIDDEN';
     const errorMessage = 'Email already used, try another email address.';
+    checkError(response, errorCode, errorName, errorMessage);
+  });
+  it('should return weak password error', async () => {
+    const token = signJWT(1, false);
+    const query = createUserRequest(weakPasswordGuy, token);
+    const response = await request(url).post('').send(query);
+    const errorCode = 422;
+    const errorName = 'BAD_USER_INPUT';
+    const errorMessage = 'Weak password: too short';
     checkError(response, errorCode, errorName, errorMessage);
   });
 });
