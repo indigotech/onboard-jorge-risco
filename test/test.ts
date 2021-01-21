@@ -1,12 +1,18 @@
 import * as request from 'supertest';
 import { runServer } from '../src/server';
 import { expect } from 'chai';
-import { checkToken, hash } from '../src/crypto';
+import { signJWT } from '../src/crypto';
 import { getRepository, Repository } from 'typeorm';
 import { User } from '../src/entity/User';
 import { validateEmail } from '../src/validation';
+import * as testUser from './test_users';
+import { checkResponse } from './expectors';
 
 let usersRepo: Repository<User>;
+const fulano = testUser.Fulano;
+const ciclano = testUser.Ciclano;
+const newGuy = testUser.newGuy;
+
 before(async () => {
   try {
     await runServer();
@@ -33,8 +39,8 @@ describe('Query test', () => {
 
 describe('Login Mutation test', async () => {
   beforeEach(async () => {
-    await addUser('Fulano', 'fulano@email.com', '1444-01-01', '1', 'arX9hAzm1KP18VqkBkw/CSuyhtPjOjo21Z4PdHM5f7Y=');
-    await addUser('Ciclano', 'ciclano@email.com', '1444-01-01', '2', 'arX9hAzm1KP18VqkBkw/CSuyhtPjOjo21Z4PdHM5f7Y=');
+    await addUser(fulano);
+    await addUser(ciclano);
   });
 
   afterEach(async () => {
@@ -42,23 +48,16 @@ describe('Login Mutation test', async () => {
   });
 
   it('should return user "Fulano"', async () => {
-    const email = 'fulano@email.com';
-    const password = 'dumb_password123';
-    const query = requestLogin(email, password, false);
-
+    const query = requestLogin(fulano.email, fulano.password, false);
     const response = await request(url).post('').send(query);
 
-    expect(validateEmail(email)).to.be.eq(true);
-    expect(checkToken(response.body.data.login.token)).to.be.eq(true);
-    expect(response.body.data.login.user.name).to.be.eq('Fulano');
-    expect(response.body.data.login.user.email).to.be.eq('fulano@email.com');
-    expect(response.body.data.login.user.birthDate).to.be.eq('1444-01-01');
-    expect(response.body.data.login.user.cpf).to.be.eq('1');
+    expect(validateEmail(fulano.email)).to.be.eq(true);
+    checkResponse('login', response, fulano);
   });
 
   it('should return error: "Invalid email format"', async () => {
     const email = '---___---===1203';
-    const password = 'dumb_password123';
+    const password = fulano.password;
     const query = requestLogin(email, password, false);
 
     await request(url).post('').send(query);
@@ -67,7 +66,7 @@ describe('Login Mutation test', async () => {
     expect(response.body.errors[0].message).to.be.eq('Invalid email format.');
   });
   it('[wrong password] should return error: "Wrong credentials"', async () => {
-    const email = 'fulano@email.com';
+    const email = fulano.email;
     const password = 'WRONG-PASSWORD!';
     const query = requestLogin(email, password, false);
 
@@ -79,7 +78,7 @@ describe('Login Mutation test', async () => {
   });
   it('[wrong email] should return error: "Wrong credentials"', async () => {
     const email = 'random@email.com';
-    const password = 'dumb_password123';
+    const password = fulano.password;
     const query = requestLogin(email, password, false);
 
     await request(url).post('').send(query);
@@ -88,45 +87,29 @@ describe('Login Mutation test', async () => {
     expect(response.body.errors[0].code).to.be.eq('INTERNAL_SERVER_ERROR');
     expect(response.body.errors[0].message).to.be.eq('Wrong credentials.');
   });
-  it('should log in and then create a new user', async () => {
-    //Logging in
-    const email = 'fulano@email.com';
-    const password = 'dumb_password123';
-    const query = requestLogin(email, password, false);
+  it('should input valid token and then create a new user', async () => {
+    const token = signJWT(1, false);
+    const email = 'newguy@email.com';
+    const query = createUserRequest(newGuy, token);
 
     const response = await request(url).post('').send(query);
-    const token: string = response.body.data.login.token;
-
-    expect(checkToken(token)).to.be.eq(true);
-    //Creating user
-
-    const query2 = createUserRequest(token);
-
-    const response2 = await request(url).post('').send(query2);
-
-    expect(response2.body.data.createUser.name).to.be.eq('NewGuy');
-    expect(response2.body.data.createUser.email).to.be.eq('newguy@email.com');
-    expect(response2.body.data.createUser.birthDate).to.be.eq('01-01-01');
-    expect(response2.body.data.createUser.cpf).to.be.eq('3');
+    const user = await getRepository(User).findOne({
+      where: { email },
+    });
+    checkResponse('createUser', response, user);
   });
   it('[Expired token] should return expired token error when trying to create user', async () => {
-    //Logging in
-    const email = 'fulano@email.com';
-    const password = 'dumb_password123';
-    const query = requestLogin(email, password, false);
-
-    const response = await request(url).post('').send(query);
     const token: string =
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOjc5OCwiaWF0IjoxNjExMDc1NDQ0LCJleHAiOjE2MTEwNzU1NjR9.BcHGkTDMIkB8RdAwIaLT04gO8O2J6RrCsfFlp9hAFEQ';
 
     //Creating user
 
-    const query2 = createUserRequest(token);
+    const query = createUserRequest(newGuy, token);
 
-    const response2 = await request(url).post('').send(query2);
+    const response = await request(url).post('').send(query);
 
-    expect(response2.body.errors[0].code).to.be.eq('INTERNAL_SERVER_ERROR');
-    expect(response2.body.errors[0].message).to.be.eq('Expired or invalid token, please log in again.');
+    expect(response.body.errors[0].code).to.be.eq('INTERNAL_SERVER_ERROR');
+    expect(response.body.errors[0].message).to.be.eq('Expired or invalid token, please log in again.');
   });
 });
 
@@ -149,16 +132,16 @@ function requestLogin(email: string, password: string, rememberMe: boolean) {
     }`,
   };
 }
-function createUserRequest(token: string) {
+function createUserRequest(user, token: string) {
   return {
     query: `mutation{
       createUser(
         token:"${token}",
-        name:"NewGuy",
-        email:"newguy@email.com",
-        birthDate:"01-01-01",
-        cpf:"3",
-        password:"dumb_password123"
+        name:"${user.name}",
+        email:"${user.email}",
+        birthDate:"${user.birthDate}",
+        cpf:"${user.cpf}",
+        password:"${user.password}"
       ) {
         id
         name
@@ -169,13 +152,13 @@ function createUserRequest(token: string) {
       }`,
   };
 }
-async function addUser(name: string, email: string, birthDate: string, cpf: string, password: string) {
+async function addUser(user) {
   const newUser = usersRepo.create({
-    name,
-    email,
-    birthDate,
-    cpf,
-    password,
+    name: user.name,
+    email: user.email,
+    birthDate: user.birthDate,
+    cpf: user.cpf,
+    password: user.hashedPassword,
   });
   await usersRepo.save(newUser);
 }
